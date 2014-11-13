@@ -14,4 +14,4 @@ Phaser.sublime-workspace
 node_modules/
 
 # Build
-dist/
+#dist/
