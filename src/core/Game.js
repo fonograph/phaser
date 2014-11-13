@@ -23,7 +23,7 @@
 * @param  {boolean} [antialias=true] - Draw all image textures anti-aliased or not. The default is for smooth textures, but disable if your game features pixel art.
 * @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
 */
-Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {
+Phaser.Game = function (width, height, renderer, canvas, state, transparent, antialias, physicsConfig) {
 
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
@@ -39,12 +39,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {object} physicsConfig - The Phaser.Physics.World configuration object.
     */
     this.physicsConfig = physicsConfig;
-
-    /**
-    * @property {string|HTMLElement} parent - The Games DOM parent.
-    * @default
-    */
-    this.parent = '';
 
     /**
     * @property {number} width - The Game width (in pixels).
@@ -196,7 +190,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     /**
     * @property {HTMLCanvasElement} canvas - A handy reference to renderer.view, the canvas that the game is being rendered in to.
     */
-    this.canvas = null;
+    this.canvas = canvas;
 
     /**
     * @property {CanvasRenderingContext2D} context - A handy reference to renderer.context (only set for CANVAS games, not WebGL)
@@ -291,11 +285,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
             this.renderType = renderer;
         }
 
-        if (typeof parent !== 'undefined')
-        {
-            this.parent = parent;
-        }
-
         if (typeof transparent !== 'undefined')
         {
             this.transparent = transparent;
@@ -357,11 +346,6 @@ Phaser.Game.prototype = {
         {
             this.renderer = config['renderer'];
             this.renderType = config['renderer'];
-        }
-
-        if (config['parent'])
-        {
-            this.parent = config['parent'];
         }
 
         if (config['transparent'])
@@ -566,15 +550,6 @@ Phaser.Game.prototype = {
             this.renderType = Phaser.CANVAS;
         }
 
-        if (this.config['canvasID'])
-        {
-            this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
-        }
-        else
-        {
-            this.canvas = Phaser.Canvas.create(this.width, this.height);
-        }
-
         if (this.config['canvasStyle'])
         {
             this.canvas.style = this.config['canvasStyle'];
@@ -619,7 +594,6 @@ Phaser.Game.prototype = {
         {
             this.stage.smoothed = this.antialias;
 
-            Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
             Phaser.Canvas.setTouchAction(this.canvas);
         }
 
